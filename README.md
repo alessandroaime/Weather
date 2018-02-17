@@ -8,6 +8,6 @@ It all started from an [inspirational mockup](https://dribbble.com/shots/2695917
 
 ![test](./README/comparison.jpg)
 
-The background has been entirely coded (see [`header_painter.dart`](https://github.com/alessandroaime/Weather/blob/master/lib/header_painter.dart)) except for the deer image, which has been **temporarily** appended using `Stack`rather than painting it.
+The background has been entirely coded (see [`header_painter.dart`](https://github.com/alessandroaime/Weather/blob/master/lib/header_painter.dart)) except for the deer image, which has been **temporarily** appended using the `Stack` widget rather than painting it.
 
 Enjoy it!
