@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class HeaderPainter extends CustomPainter {
   HeaderPainter();
+
   final double animationValue = 0.0;
 
   @override
@@ -76,6 +77,12 @@ class HeaderPainter extends CustomPainter {
       new Paint()..color = Colors.white.withOpacity(opacity),
     );
   }
+
+  /*_drawImage(Canvas canvas) {
+    image.load(null).addListener((info, _) {
+      canvas.drawImage(info.image, Offset.zero, new Paint()..color = Colors.white);
+    });
+  }*/
 
   _drawTree(Canvas canvas, Size size, double dx, double width, double height) {
     var path = new Path();

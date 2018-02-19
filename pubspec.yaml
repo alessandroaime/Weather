@@ -5,6 +5,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.0
+  location: ^1.1.7
 
 dev_dependencies:
   flutter_test:
