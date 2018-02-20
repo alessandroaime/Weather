@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather/daily_forecast.dart';
+import 'package:weather/openweather_api.dart';
 import 'package:weather/utils.dart';
 
 class WeatherWidget extends StatefulWidget {
@@ -9,7 +11,8 @@ class WeatherWidget extends StatefulWidget {
 class _WeatherWidgetState extends State<WeatherWidget> {
   int _currentTemperature;
   String _currentLocation;
-  List<String> _weatherForecast;
+  List<String> _weekdaysData;
+  List<DailyForecast> _weatherForecast;
   bool _loading = true;
 
   @override
@@ -28,7 +31,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
               new Padding(
                 padding: const EdgeInsets.only(top: 110.0, bottom: 10.0),
                 child: new Text(
-                  'Helsinki',
+                  _currentLocation,
                   style: new TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.normal,
@@ -56,22 +59,18 @@ class _WeatherWidgetState extends State<WeatherWidget> {
   }
 
   _buildListView() {
-    return new ListView(
-      children: <Widget>[
-        _buildDailyWeatherRow('Monday', _weatherForecast[0], Icons.wb_cloudy),
-        _buildDailyWeatherRow('Tuesday', _weatherForecast[2], Icons.wb_cloudy),
-        _buildDailyWeatherRow(
-            'Wednesday', _weatherForecast[4], Icons.wb_cloudy),
-        _buildDailyWeatherRow('Thursday', _weatherForecast[6], Icons.wb_cloudy),
-        _buildDailyWeatherRow('Friday', _weatherForecast[8], Icons.wb_cloudy),
-        _buildDailyWeatherRow(
-            'Saturday', _weatherForecast[10], Icons.wb_cloudy),
-        _buildDailyWeatherRow('Sunday', _weatherForecast[12], Icons.wb_cloudy),
-      ],
+    return new ListView.builder(
+      itemCount: 7,
+      itemBuilder: (context, index) {
+        return _buildDailyWeatherRow(
+            _weekdaysData[index],
+            _weatherForecast[index].temp.toInt(),
+            _weatherForecast[index].getWeatherIcon());
+      },
     );
   }
 
-  _buildDailyWeatherRow(String day, String temperature, IconData icon) {
+  _buildDailyWeatherRow(String day, int temp, IconData icon) {
     return new Padding(
       padding: const EdgeInsets.only(left: 50.0),
       child: new Row(
@@ -79,7 +78,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
           new Expanded(
             child: _buildText(day),
           ),
-          _buildText('$temperatureº'),
+          _buildText('$tempº'),
           _buildIcon(icon),
         ],
       ),
@@ -88,7 +87,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
 
   _buildText(String string) {
     return new Padding(
-      padding: const EdgeInsets.only(bottom: 55.0),
+      padding: const EdgeInsets.only(bottom: 45.0),
       child: new Text(
         string,
         style: new TextStyle(
@@ -109,24 +108,21 @@ class _WeatherWidgetState extends State<WeatherWidget> {
   }
 
   _fetchData() async {
-    await _getCurrentTemperature();
-    await _getWeatherForecast();
+    final OpenWeatherAPI openWeatherAPI = new OpenWeatherAPI();
+    var weekdaysData = getWeekdaysList(7);
+    var currentCoord = await getCoordinates();
+    var lat = currentCoord[0];
+    var lon = currentCoord[1];
+    var currentLocation = await getLocation(lat, lon);
+    var currentTemperature =
+        await openWeatherAPI.getCurrentTemperature(lat, lon);
+    var weatherForecast = await openWeatherAPI.getWeatherForecast(lat, lon, 7);
     setState(() {
-      _loading = false;
-    });
-  }
-
-  _getCurrentTemperature() async {
-    var currentTemperature = await getCurrentTemperature();
-    setState(() {
+      _weekdaysData = weekdaysData;
+      _currentLocation = currentLocation[0];
       _currentTemperature = currentTemperature;
-    });
-  }
-
-  _getWeatherForecast() async {
-    var weatherForecast = await getWeatherForecast();
-    setState(() {
       _weatherForecast = weatherForecast;
+      _loading = false;
     });
   }
 }

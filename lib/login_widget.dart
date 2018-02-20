@@ -63,7 +63,6 @@ class _LoginWidgetState extends State<LoginWidget> {
           minWidth: 300.0,
           height: 50.0,
           onPressed: () {
-            getWeatherForecast();
             if (true)
               widget.loginCallback();
             else

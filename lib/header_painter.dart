@@ -78,12 +78,6 @@ class HeaderPainter extends CustomPainter {
     );
   }
 
-  /*_drawImage(Canvas canvas) {
-    image.load(null).addListener((info, _) {
-      canvas.drawImage(info.image, Offset.zero, new Paint()..color = Colors.white);
-    });
-  }*/
-
   _drawTree(Canvas canvas, Size size, double dx, double width, double height) {
     var path = new Path();
     path.addPolygon([

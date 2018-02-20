@@ -4,12 +4,12 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - Flutter (from `/Users/alessandro/Library/flutter/bin/cache/artifacts/engine/ios`)
+  - Flutter (from `/Users/alessandro/Library/flutter/bin/cache/artifacts/engine/ios-release`)
   - location (from `/Users/alessandro/.pub-cache/hosted/pub.dartlang.org/location-1.1.7/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
-    :path: /Users/alessandro/Library/flutter/bin/cache/artifacts/engine/ios
+    :path: /Users/alessandro/Library/flutter/bin/cache/artifacts/engine/ios-release
   location:
     :path: /Users/alessandro/.pub-cache/hosted/pub.dartlang.org/location-1.1.7/ios
 

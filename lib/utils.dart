@@ -3,68 +3,58 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
-Future<Map<String, double>> _getCoordinates() async {
-  var currentLocation = <String, double>{};
-  var location = new Location();
+Future<Map<String, dynamic>> makeHttpsRequest(Uri uri) async {
+  var httpClient = new HttpClient();
+  var request = await httpClient.getUrl(uri);
+  var response = await request.close();
+  var responseBody = await response.transform(UTF8.decoder).join();
+  Map<String, dynamic> responseMap = JSON.decode(responseBody);
+  return responseMap;
+}
+
+Future<List<double>> getCoordinates() async {
+  var location = <String, double>{};
 
   try {
-    currentLocation = await location.getLocation;
+    location = await new Location().getLocation;
   } on PlatformException {
-    currentLocation = null;
+    location = null;
   }
-  return currentLocation;
+
+  var lat = location["latitude"];
+  var lon = location["longitude"];
+
+  return [lat, lon];
 }
 
-Future<int> getCurrentTemperature() async {
-  Map<String, double> currentLocation = await _getCoordinates();
-  var latitude = currentLocation["latitude"].toString();
-  var longitude = currentLocation["longitude"].toString();
-  var key = '***REMOVED***';
+Future<List<String>> getLocation(double lat, double lon) async {
+  var key = 'AIzaSyDXfRKOQt21POVoCe5bXu6BqorqqPwqyWg';
 
-  var urlCurrentWeather = '/data/2.5/weather';
-  var httpClient = new HttpClient();
+  var url = '/maps/api/geocode/json';
   var uri = new Uri.https(
-    'api.openweathermap.org',
-    urlCurrentWeather,
-    {'lat': latitude, 'lon': longitude, 'APPID': key},
+    'maps.googleapis.com',
+    url,
+    {'latlng': ('$lat, $lon'), 'key': key},
   );
-  var request = await httpClient.getUrl(uri);
-  var response = await request.close();
-  var responseBody = await response.transform(UTF8.decoder).join();
-  Map<String, dynamic> responseMap = JSON.decode(responseBody);
-  var kelvinTemperature = responseMap['main']['temp'];
-  var celsiusTemperature = _kelvinToCelsius(kelvinTemperature);
-  return celsiusTemperature.toInt();
+  Map<String, dynamic> responseMap = await makeHttpsRequest(uri);
+  var city = responseMap['results'][0]['address_components'][2]['long_name'];
+  var country =
+      responseMap['results'][0]['address_components'][4]['short_name'];
+  return [city, country];
 }
 
-Future<List<dynamic>> getWeatherForecast() async {
-  Map<String, double> currentLocation = await _getCoordinates();
-  var latitude = currentLocation["latitude"].toString();
-  var longitude = currentLocation["longitude"].toString();
-  var key = '***REMOVED***';
+List<String> getWeekdaysList(int length) {
+  List<String> weekdaysList = [];
+  var now = new DateTime.now();
+  var formatter = new DateFormat('EEEE');
 
-  var urlWeekWeather = '/data/2.5/forecast';
-  var httpClient = new HttpClient();
-  var uri = new Uri.https(
-    'api.openweathermap.org',
-    urlWeekWeather,
-    {'lat': latitude, 'lon': longitude, 'cnt': '7', 'APPID': key},
-  );
-  var request = await httpClient.getUrl(uri);
-  var response = await request.close();
-  var responseBody = await response.transform(UTF8.decoder).join();
-  Map<String, dynamic> responseMap = JSON.decode(responseBody);
-  var weatherForecastData = [];
-  for (var index = 0; index < 7; index++) {
-    var kelvinTemperature = responseMap['list'][index]['main']['temp'];
-    weatherForecastData.add(_kelvinToCelsius(kelvinTemperature).toInt().toString());
-    weatherForecastData.add(responseMap['list'][index]['weather'][0]['main']);
+  for (int i = 0; i < length; i++) {
+    String formatted = formatter.format(now.add(new Duration(days: i)));
+    weekdaysList.add(formatted);
   }
-  return weatherForecastData;
-}
 
-double _kelvinToCelsius(double kelvinTemperature) {
-  return kelvinTemperature - 273.15;
+  return weekdaysList;
 }
