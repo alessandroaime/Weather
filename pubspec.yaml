@@ -4,9 +4,9 @@ description: A new Flutter application.
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.0
-  location: ^1.1.7
   intl: ^0.15.2
+  location: ^1.1.7
+  shared_preferences: ^0.3.2
 
 dev_dependencies:
   flutter_test:

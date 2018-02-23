@@ -12,7 +12,7 @@ class WeatherApp extends StatelessWidget {
       title: 'Weather',
       home: new HomePage(),
       theme: new ThemeData(
-        primaryColor: Colors.lightBlueAccent,
+        primarySwatch: Colors.lightBlue,
         accentColor: Colors.lightBlueAccent,
       ),
     );

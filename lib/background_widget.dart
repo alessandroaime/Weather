@@ -7,18 +7,11 @@ class BackgroundWidget extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.white,
       body: new Stack(
-        alignment: Alignment.lerp(
-            Alignment.lerp(Alignment.centerRight, Alignment.center, 0.3),
-            Alignment.topCenter,
-            0.15),
+        alignment: new Alignment(0.5, 0.94),
         children: <Widget>[
-          new Column(
-            children: [
-              new CustomPaint(
-                painter: new HeaderPainter(),
-                child: new Container(height: 345.0),
-              ),
-            ],
+          new CustomPaint(
+            painter: new HeaderPainter(),
+            child: new Container(height: 345.0),
           ),
           new Image.asset(
             'assets/reindeer.png',

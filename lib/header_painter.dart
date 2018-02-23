@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class HeaderPainter extends CustomPainter {
@@ -34,16 +36,32 @@ class HeaderPainter extends CustomPainter {
     _drawTree(canvas, size, size.width - 35.0, 25.0, 60.0);
     _drawTree(canvas, size, size.width - 10.0, 10.0, 20.0);
 
-    _drawFallingStar(canvas, 135.0, 90.0, 210.0, 40.0, 1.0);
-    _drawFallingStar(canvas, 275.0, 60.0, 315.0, 30.0, 0.25);
-    _drawFallingStar(canvas, 325.0, 135.0, 360.0, 100.0, 1.0);
+    _drawFallingStar(canvas, 135.0, 90.0, 100.0, 1.8, -35.0, 1.0);
+    _drawFallingStar(canvas, 275.0, 60.0, 50.0, 1.5, -35.0, 0.3);
+    _drawFallingStar(canvas, 325.0, 135.0, 50.0, 1.5, -35.0, 1.0);
+  }
+
+  _getTopSkyColor() {
+    DateTime now = new DateTime.now();
+    int minsTime = now.hour * 60 + now.minute;
+    var lerpValue = (minsTime <= 720) ? minsTime / 720 : (2 - minsTime / 720);
+    return Color.lerp(
+        Colors.indigo.shade700, Colors.lightBlueAccent.shade700, lerpValue);
+  }
+
+  _getBottomSkyColor() {
+    DateTime now = new DateTime.now();
+    int minsTime = now.hour * 60 + now.minute;
+    var lerpValue = (minsTime <= 720) ? minsTime / 720 : (2 - minsTime / 720);
+    return Color.lerp(
+        Colors.indigo.shade100, Colors.lightBlueAccent.shade100, lerpValue);
   }
 
   _drawSky(Canvas canvas, Size size) {
     var skyGradient = new LinearGradient(
       colors: [
-        Colors.lightBlueAccent.shade700,
-        Colors.lightBlueAccent.shade100.withOpacity(0.8),
+        _getTopSkyColor(),
+        _getBottomSkyColor().withOpacity(0.8),
       ],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -80,11 +98,14 @@ class HeaderPainter extends CustomPainter {
 
   _drawTree(Canvas canvas, Size size, double dx, double width, double height) {
     var path = new Path();
-    path.addPolygon([
-      new Offset(dx, size.height),
-      new Offset(dx + width, size.height),
-      new Offset(dx + width / 2, size.height - height),
-    ], true);
+    path.addPolygon(
+      [
+        new Offset(dx, size.height),
+        new Offset(dx + width, size.height),
+        new Offset(dx + width / 2, size.height - height),
+      ],
+      true,
+    );
     path.close();
 
     canvas.drawPath(path, new Paint()..color = Colors.white);
@@ -111,8 +132,8 @@ class HeaderPainter extends CustomPainter {
     );
   }
 
-  _drawFallingStar(Canvas canvas, double dx, double dy, double endX,
-      double endY, double opacity) {
+  _drawFallingStar(Canvas canvas, double dx, double dy, double h, double r,
+      num alpha, double opacity) {
     var fallingStarGradient = new LinearGradient(
       colors: [
         Colors.white.withOpacity(opacity),
@@ -121,23 +142,33 @@ class HeaderPainter extends CustomPainter {
     );
 
     var path = new Path();
-    path.addPolygon([
-      new Offset(dx - 1.0, dy - 1.5),
-      new Offset(dx + 1.5, dy + 1.0),
-      new Offset(endX, endY),
-    ], true);
+
+    var rad = alpha * pi / 180;
+    var cx = dx + h * cos(rad);
+    var cy = dy + h * sin(rad);
+    var xDiff = r * cos(rad);
+    var yDiff = r * sin(rad);
+
+    path.addPolygon(
+      [
+        new Offset(dx - xDiff, dy + yDiff),
+        new Offset(dx + xDiff, dy - yDiff),
+        new Offset(cx, cy),
+      ],
+      true,
+    );
     path.close();
 
     canvas.drawPath(
       path,
       new Paint()
         ..shader = fallingStarGradient.createShader(
-          new Rect.fromLTRB(dx, dy, endX, endY),
+          new Rect.fromLTRB(dx, dy, cx, cy),
         ),
     );
-    canvas.drawCircle(new Offset(dx, dy), 1.6,
-        new Paint()..color = Colors.white.withOpacity(opacity - 0.2));
-    _drawStar(canvas, dx, dy, 1.5, opacity);
+    canvas.drawCircle(new Offset(dx, dy), r,
+        new Paint()..color = Colors.white.withOpacity(opacity));
+    //_drawStar(canvas, dx, dy, r, opacity);
   }
 
   _drawSun(Canvas canvas) {
@@ -169,28 +200,21 @@ class HeaderPainter extends CustomPainter {
   _drawSunRays(Canvas canvas) {
     var sunCenter = new Offset(60.0, 90.0);
 
-    var sunRayHorizontalColors = [
-      new Color(0xFF4DA3E9).withOpacity(0.2),
-      Colors.white.withOpacity(0.6),
-      new Color(0xFF4DA3E9).withOpacity(0.2),
-    ];
-
-    var sunRayVerticalColors = [
-      new Color(0xFF4197E5).withOpacity(0.2),
-      Colors.white.withOpacity(0.6),
-      new Color(0xFF66B6EF).withOpacity(0.2),
+    var sunRayColors = [
+      Colors.white.withOpacity(0.0),
+      Colors.white.withOpacity(0.5),
+      Colors.white.withOpacity(0.0)
     ];
 
     var sunRayHorizontalRect = new Rect.fromLTRB(sunCenter.dx - 60.0,
         sunCenter.dy - 18.0, sunCenter.dx + 60.0, sunCenter.dy + 18.0);
     var sunRayVerticalRect = new Rect.fromLTRB(sunCenter.dx - 18.0,
         sunCenter.dy - 60.0, sunCenter.dx + 18.0, sunCenter.dy + 60.0);
-    var sunRayHorizontalGradient =
-        new LinearGradient(colors: sunRayHorizontalColors);
+    var sunRayHorizontalGradient = new LinearGradient(colors: sunRayColors);
     var sunRayVerticalGradient = new LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: sunRayVerticalColors,
+      colors: sunRayColors,
     );
 
     canvas.drawRect(

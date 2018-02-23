@@ -6,22 +6,9 @@ import 'package:weather/utils.dart';
 class OpenWeatherAPI {
   final key = '***REMOVED***';
 
-  Future<int> getCurrentTemperature(double lat, double lon) async {
-    var url = '/data/2.5/weather';
-    var uri = new Uri.https(
-      'api.openweathermap.org',
-      url,
-      {'lat': '$lat', 'lon': '$lon', 'APPID': key, 'units': 'metric'},
-    );
-    Map<String, dynamic> responseMap = await makeHttpsRequest(uri);
-    var temp = responseMap['main']['temp'];
-    return temp.toInt();
-  }
-
-  Future<List<DailyForecast>> getWeatherForecast(double lat, double lon,
-      [int days]) async {
-    var cnt = days ?? 7;
-    var url = '/data/2.5/forecast';
+  Future<Map<String, dynamic>> _getData(String api, double lat, double lon,
+      [int cnt]) async {
+    var url = '/data/2.5/$api';
     var uri = new Uri.https(
       'api.openweathermap.org',
       url,
@@ -30,18 +17,30 @@ class OpenWeatherAPI {
         'lon': '$lon',
         'cnt': '$cnt',
         'APPID': key,
-        'units': 'metric'
+        'units': 'metric',
       },
     );
-    Map<String, dynamic> responseMap = await makeHttpsRequest(uri);
+    return await makeHttpsRequest(uri);
+  }
 
-    List<DailyForecast> dailyForecastList = new List<DailyForecast>();
+  Future<int> getCurrentTemperature(double lat, double lon) async {
+    Map<String, dynamic> responseMap = await _getData('weather', lat, lon);
+    var temperature = responseMap['main']['temp'];
+
+    return temperature.toInt();
+  }
+
+  Future<List<DailyForecast>> getWeatherForecast(double lat, double lon, int cnt) async {
+    Map<String, dynamic> responseMap = await _getData('forecast', lat, lon, cnt);
+    List<DailyForecast> dailyForecastList = [];
+
     for (var index = 0; index < cnt; index++) {
-      var temp = responseMap['list'][index]['main']['temp'];
-      var weatherCode = responseMap['list'][index]['weather'][0]['id'];
-      DailyForecast dailyForecast = new DailyForecast(temp, weatherCode);
+      var temperature = responseMap['list'][index]['main']['temp'];
+      var weather = responseMap['list'][index]['weather'][0]['id'];
+      var dailyForecast = new DailyForecast(temperature.toInt(), weather);
       dailyForecastList.add(dailyForecast);
     }
+
     return dailyForecastList;
   }
 }
