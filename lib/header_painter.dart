@@ -3,9 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class HeaderPainter extends CustomPainter {
-  HeaderPainter();
+  HeaderPainter(this.animationValue, this.firstStarOffset);
 
-  final double animationValue = 0.0;
+  final double animationValue;
+  final Offset firstStarOffset;
 
   @override
   paint(Canvas canvas, Size size) {
@@ -36,33 +37,31 @@ class HeaderPainter extends CustomPainter {
     _drawTree(canvas, size, size.width - 35.0, 25.0, 60.0);
     _drawTree(canvas, size, size.width - 10.0, 10.0, 20.0);
 
-    _drawFallingStar(canvas, 135.0, 90.0, 100.0, 1.8, -35.0, 1.0);
-    _drawFallingStar(canvas, 275.0, 60.0, 50.0, 1.5, -35.0, 0.3);
-    _drawFallingStar(canvas, 325.0, 135.0, 50.0, 1.5, -35.0, 1.0);
+    var dx = firstStarOffset.dx;
+    var dy = firstStarOffset.dy;
+
+    _drawFallingStar(canvas, dx, dy, 100.0, 1.8, -35.0, 1.0);
+    _drawFallingStar(canvas, dx + 140.0, dy - 30.0, 50.0, 1.5, -35.0, 0.3);
+    _drawFallingStar(canvas, dx + 190.0, dy + 45.0, 50.0, 1.5, -35.0, 1.0);
   }
 
-  _getTopSkyColor() {
+  _getSkyColors() {
     DateTime now = new DateTime.now();
-    int minsTime = now.hour * 60 + now.minute;
-    var lerpValue = (minsTime <= 720) ? minsTime / 720 : (2 - minsTime / 720);
-    return Color.lerp(
+    int timeAsMins = now.hour * 60 + now.minute;
+    var lerpValue =
+        (timeAsMins <= 720) ? timeAsMins / 720 : (2 - timeAsMins / 720);
+    var topSkyColor = Color.lerp(
         Colors.indigo.shade700, Colors.lightBlueAccent.shade700, lerpValue);
-  }
-
-  _getBottomSkyColor() {
-    DateTime now = new DateTime.now();
-    int minsTime = now.hour * 60 + now.minute;
-    var lerpValue = (minsTime <= 720) ? minsTime / 720 : (2 - minsTime / 720);
-    return Color.lerp(
-        Colors.indigo.shade100, Colors.lightBlueAccent.shade100, lerpValue);
+    var bottomSkyColor = Color
+        .lerp(
+            Colors.indigo.shade100, Colors.lightBlueAccent.shade100, lerpValue)
+        .withOpacity(0.8);
+    return [topSkyColor, bottomSkyColor];
   }
 
   _drawSky(Canvas canvas, Size size) {
     var skyGradient = new LinearGradient(
-      colors: [
-        _getTopSkyColor(),
-        _getBottomSkyColor().withOpacity(0.8),
-      ],
+      colors: _getSkyColors(),
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
     );
@@ -231,5 +230,5 @@ class HeaderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HeaderPainter oldDelegate) =>
-      oldDelegate.animationValue != animationValue;
+      oldDelegate.animationValue != animationValue || oldDelegate.firstStarOffset != firstStarOffset;
 }
