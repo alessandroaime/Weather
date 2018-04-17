@@ -9,8 +9,8 @@ Future<Map<String, dynamic>> makeHttpsRequest(Uri uri) async {
   var httpClient = new HttpClient();
   var request = await httpClient.getUrl(uri);
   var response = await request.close();
-  var responseBody = await response.transform(UTF8.decoder).join();
-  Map<String, dynamic> responseMap = JSON.decode(responseBody);
+  var responseBody = await response.transform(utf8.decoder).join();
+  Map<String, dynamic> responseMap = json.decode(responseBody);
 
   return responseMap;
 }
