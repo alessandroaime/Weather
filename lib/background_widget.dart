@@ -25,7 +25,7 @@ class _BackgroundWidgetState extends State<BackgroundWidget>
     var beginOffset = new Offset(290.0, 0.0);
     var endOffset = _getEndOffset(beginOffset);
     animationStarOffset =
-        new Tween(begin: beginOffset, end: endOffset).animate(controller);
+        new Tween<Offset>(begin: beginOffset, end: endOffset).animate(controller);
     controller.forward();
   }
 

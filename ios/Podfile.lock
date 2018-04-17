@@ -6,20 +6,20 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - Flutter (from `/Users/alessandro/Library/flutter/bin/cache/artifacts/engine/ios`)
-  - location (from `/Users/alessandro/.pub-cache/hosted/pub.dartlang.org/location-1.1.7/ios`)
-  - shared_preferences (from `/Users/alessandro/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.3.2/ios`)
+  - Flutter (from `/Users/alessandro/Library/Google/flutter/bin/cache/artifacts/engine/ios`)
+  - location (from `/Users/alessandro/Library/Google/flutter/.pub-cache/hosted/pub.dartlang.org/location-1.2.0/ios`)
+  - shared_preferences (from `/Users/alessandro/Library/Google/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.3.3/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
-    :path: /Users/alessandro/Library/flutter/bin/cache/artifacts/engine/ios
+    :path: /Users/alessandro/Library/Google/flutter/bin/cache/artifacts/engine/ios
   location:
-    :path: /Users/alessandro/.pub-cache/hosted/pub.dartlang.org/location-1.1.7/ios
+    :path: /Users/alessandro/Library/Google/flutter/.pub-cache/hosted/pub.dartlang.org/location-1.2.0/ios
   shared_preferences:
-    :path: /Users/alessandro/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.3.2/ios
+    :path: /Users/alessandro/Library/Google/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.3.3/ios
 
 SPEC CHECKSUMS:
-  Flutter: 7eb41cd1fd524b90d7f22bceb20da2c39338b089
+  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   location: 26c90953ad5916331d0d1d913898779910416487
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
 
