@@ -4,9 +4,9 @@ description: A new Flutter application.
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.15.2
-  location: ^1.1.7
-  shared_preferences: ^0.3.2
+  intl: ^0.15.7
+  location: ^1.4.1
+  shared_preferences: ^0.4.2
 
 dev_dependencies:
   flutter_test:
