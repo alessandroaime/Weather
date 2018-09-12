@@ -16,7 +16,7 @@ Future<Map<String, dynamic>> makeHttpsRequest(Uri uri) async {
 }
 
 Future<List<double>> getCoordinates() async {
-  Map<String, double> location = await new Location().getLocation;
+  Map<String, double> location = await new Location().getLocation();
   double lat = location["latitude"];
   double lon = location["longitude"];
 
