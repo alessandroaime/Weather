@@ -24,7 +24,7 @@ Future<List<double>> getCoordinates() async {
 }
 
 Future<String> getLocation(double lat, double lon) async {
-  var key = 'AIzaSyDXfRKOQt21POVoCe5bXu6BqorqqPwqyWg';
+  var key = 'YOUR_OPENWEATHER_API_KEY';
   var url = '/maps/api/geocode/json';
   var uri = new Uri.https(
     'maps.googleapis.com',
