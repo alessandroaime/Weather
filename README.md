@@ -1,12 +1,14 @@
 # Weather
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Quick Disclaimer
 
 I removed my private OpenWeather API key from the repo, if you want to get the weather forecast use your own in the `openweather_api.dart` file (more info at [https://openweathermap.org/appid](https://openweathermap.org/appid)).
 
 ## Back to the app
 
-*I started from scatch with Flutter and Dart two weeks ago, a refactoring is needed due to the ugliness of the current code since my main purpose is/was to learn them at first.*
+*I started from scatch with Flutter and Dart two weeks ago (2018/02/02), a refactoring is needed due to the ugliness of the current code since my main purpose is/was to learn them at first.*
 
 The idea behind this weather application (currently only the login page) is to learn how to use Canvas and Animation in Flutter.
 
